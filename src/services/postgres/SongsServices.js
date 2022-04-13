@@ -7,7 +7,16 @@ const { mapDBtoModel } = require('../../utils');
 
 class SongsService {
   constructor() {
-    this._pool = new Pool();
+    if (process.env.NODE_ENV === 'production') {
+      this._pool = new Pool({
+        connectionString: process.env.PGURI,
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      });
+    } else {
+      this._pool = new Pool();
+    }
   }
 
   async addSong({

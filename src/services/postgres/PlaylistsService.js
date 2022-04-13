@@ -8,7 +8,16 @@ const NotFoundError = require('../../exceptions/NotFoundError');
 
 class PlaylistService {
   constructor(collaborationsService) {
-    this._pool = new Pool();
+    if (process.env.NODE_ENV === 'production') {
+      this._pool = new Pool({
+        connectionString: process.env.PGURI,
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      });
+    } else {
+      this._pool = new Pool();
+    }
     this._collaborationsService = collaborationsService;
   }
 

@@ -6,7 +6,16 @@ const InvariantError = require('../../exceptions/InvariantError');
 
 class CollaborationsService {
   constructor() {
-    this._pool = new Pool();
+    if (process.env.NODE_ENV === 'production') {
+      this._pool = new Pool({
+        connectionString: process.env.PGURI,
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      });
+    } else {
+      this._pool = new Pool();
+    }
   }
 
   async addCollaboration(playlistId, userId) {
