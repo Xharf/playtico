@@ -20,13 +20,13 @@ class SongsService {
   }
 
   async addSong({
-    title, year, performer, genre, duration, cover,
+    title, year, performer, genre, duration, cover, song,
   }) {
     const id = `song-${nanoid(16)}`;
     const insertedAt = new Date().toISOString();
     const query = {
-      text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7, $8, $8) RETURNING id',
-      values: [id, title, year, performer, genre, duration, cover, insertedAt],
+      text: 'INSERT INTO songs VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $9) RETURNING id',
+      values: [id, title, year, performer, genre, duration, cover, song, insertedAt],
     };
 
     const result = await this._pool.query(query);
@@ -39,7 +39,7 @@ class SongsService {
   }
 
   async getSongs() {
-    const result = await this._pool.query('SELECT id, title, performer, cover FROM songs');
+    const result = await this._pool.query('SELECT id, title, performer, cover, song FROM songs');
     return result.rows.map(mapDBtoModel);
   }
 
@@ -59,7 +59,7 @@ class SongsService {
 
   async getSongsByPlaylist(owner) {
     const query = {
-      text: `SELECT songs.id, songs.title, songs.performer, songs.cover FROM songs
+      text: `SELECT songs.id, songs.title, songs.performer, songs.cover, songs.song FROM songs
       LEFT JOIN playlistsongs ON playlistsongs.song_id = songs.id
       INNER JOIN playlists ON playlistsongs.playlist_id = playlists.id
       INNER JOIN collaborations ON playlists.id = collaborations.playlist_id
@@ -72,12 +72,14 @@ class SongsService {
   }
 
   async editSongById(id, {
-    title, year, performer, genre, duration, cover = 'https://storage.googleapis.com/playtico-0123.appspot.com/16497835433630ef32f2605448f80a48f7257415cb116.jpg',
+    title, year, performer, genre, duration,
+    cover = 'https://storage.googleapis.com/playtico-0123.appspot.com/16497835433630ef32f2605448f80a48f7257415cb116.jpg',
+    song,
   }) {
     const updatedAt = new Date().toISOString();
     const query = {
-      text: 'UPDATE songs SET title = $1, year = $2, performer = $3, genre = $4, duration = $5, cover = $6, updated_at = $7 WHERE id = $8 RETURNING id',
-      values: [title, year, performer, genre, duration, cover, updatedAt, id],
+      text: 'UPDATE songs SET title = $1, year = $2, performer = $3, genre = $4, duration = $5, cover = $6, song = $7 updated_at = $8 WHERE id = $9 RETURNING id',
+      values: [title, year, performer, genre, duration, cover, song, updatedAt, id],
     };
 
     const result = await this._pool.query(query);
