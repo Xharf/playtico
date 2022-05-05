@@ -26,7 +26,7 @@ class StorageService {
       await this._bucket.file(filename).delete();
     } catch (error) {
       if (error.code === 404) {
-        throw new NotFoundError('Gambar tidak ditemukan');
+        throw new NotFoundError('File tidak ditemukan');
       }
       throw error;
     }

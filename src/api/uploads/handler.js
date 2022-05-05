@@ -10,6 +10,8 @@ class UploadsHandler {
 
     this.postUploadPictureHandler = this.postUploadPictureHandler.bind(this);
     this.deletePictureHandler = this.deletePictureHandler.bind(this);
+    this.postUploadSongHandler = this.postUploadSongHandler.bind(this);
+    this.deleteSongHandler = this.deleteSongHandler.bind(this);
   }
 
   async postUploadPictureHandler(request, h) {
@@ -55,6 +57,70 @@ class UploadsHandler {
       return {
         status: 'success',
         message: 'Gambar berhasil dihapus',
+      };
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: 'fail',
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+      // Server ERROR!
+      const response = h.response({
+        status: 'error',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
+  }
+
+  async postUploadSongHandler(request, h) {
+    try {
+      const { data } = request.payload;
+      this._validator.validateSongHeaders(data.hapi.headers);
+
+      const fileName = await this._service.writeFile(data, data.hapi);
+
+      const response = h.response({
+        status: 'success',
+        message: 'Lagu berhasil diunggah',
+        data: {
+          songUrl: `https://storage.googleapis.com/${process.env.STORAGE_BUCKET}/${fileName}`,
+        },
+      });
+      response.code(201);
+      return response;
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: 'fail',
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+      // Server ERROR!
+      const response = h.response({
+        status: 'error',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
+  }
+
+  async deleteSongHandler(request, h) {
+    try {
+      const { filename } = request.params;
+      await this._service.deleteFile(filename);
+      return {
+        status: 'success',
+        message: 'Lagu berhasil dihapus',
       };
     } catch (error) {
       if (error instanceof ClientError) {
