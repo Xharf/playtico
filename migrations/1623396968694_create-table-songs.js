@@ -32,6 +32,10 @@ exports.up = (pgm) => {
       type: 'VARCHAR(255)',
       notNull: true,
     },
+    song: {
+      type: 'VARCHAR(255)',
+      notNull: true,
+    },
     inserted_at: {
       type: 'TEXT',
       notNull: true,
