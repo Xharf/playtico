@@ -7,6 +7,7 @@ const mapDBtoModel = ({
   genre,
   duration,
   cover,
+  song,
   inserted_at,
   updated_at,
 }) => ({
@@ -17,6 +18,7 @@ const mapDBtoModel = ({
   genre,
   duration,
   cover,
+  song,
   insertedAt: inserted_at,
   updatedAt: updated_at,
 });
