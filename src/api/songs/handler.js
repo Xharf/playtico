@@ -19,11 +19,13 @@ class SongsHandler {
       this._validator.validateSongPayload(request.payload);
 
       const {
-        title = 'untitled', year, performer, genre, duration, cover = 'https://storage.googleapis.com/playtico-0123.appspot.com/16497835433630ef32f2605448f80a48f7257415cb116.jpg',
+        title = 'untitled', year, performer, genre, duration,
+        cover = 'https://storage.googleapis.com/playtico-0123.appspot.com/16497835433630ef32f2605448f80a48f7257415cb116.jpg',
+        song,
       } = request.payload;
 
       const songId = await this._service.addSong({
-        title, year, performer, genre, duration, cover,
+        title, year, performer, genre, duration, cover, song,
       });
 
       const response = h.response({
