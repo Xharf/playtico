@@ -78,7 +78,7 @@ class SongsService {
   }) {
     const updatedAt = new Date().toISOString();
     const query = {
-      text: 'UPDATE songs SET title = $1, year = $2, performer = $3, genre = $4, duration = $5, cover = $6, song = $7 updated_at = $8 WHERE id = $9 RETURNING id',
+      text: 'UPDATE songs SET title = $1, year = $2, performer = $3, genre = $4, duration = $5, cover = $6, song = $7, updated_at = $8 WHERE id = $9 RETURNING id',
       values: [title, year, performer, genre, duration, cover, song, updatedAt, id],
     };
 
