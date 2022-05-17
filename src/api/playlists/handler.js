@@ -17,11 +17,11 @@ class PlaylistHandler {
     try {
       this._validator.validatePlaylistPayload(request.payload);
 
-      const { name } = request.payload;
+      const { name, cover } = request.payload;
       const { id: credentialId } = request.auth.credentials;
 
       const playlistId = await this._service.addPlaylist({
-        name, owner: credentialId,
+        name, owner: credentialId, cover,
       });
 
       const response = h.response({
