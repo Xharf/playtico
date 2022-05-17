@@ -88,7 +88,7 @@ class UsersService {
       values: [username],
     };
     const result = await this._pool.query(query);
-    return result.rows;
+    return result.rows[0];
   }
 
   async verifyUserCredential(username, password) {

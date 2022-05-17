@@ -121,11 +121,11 @@ class UsersHandler {
   async getUsersByUsernameHandler(request, h) {
     try {
       const { username = '' } = request.query;
-      const users = await this._service.getUsersByUsername(username);
+      const user = await this._service.getUsersByUsername(username);
       return {
         status: 'success',
         data: {
-          users,
+          user,
         },
       };
     } catch (error) {
